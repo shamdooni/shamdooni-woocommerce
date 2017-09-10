@@ -33,7 +33,7 @@ function shamduni_rounder_options_page() {
 }
 
 function shamdooni_rounder_backend_styles() {
-    wp_enqueue_style( 'shamdooni_rounder_backend_css', plugins_url('shamdooni-rounder/includes/backend.css'));
+    wp_enqueue_style( 'shamdooni_rounder_backend_css', plugins_url('shamdooni/includes/backend.css'));
 }
 
 add_action('admin_head', 'shamdooni_rounder_backend_styles');
