@@ -25,7 +25,8 @@ register_activation_hook( __FILE__, 'jal_install' );
 register_activation_hook( __FILE__, 'jal_install_data' );
 
 require('includes/settings.php');
+require('includes/api.php');
+require('includes/new-trans.php');
 require('includes/checkout-script.php');
 require('includes/iframe.php');
-require('includes/api.php');
 ?>

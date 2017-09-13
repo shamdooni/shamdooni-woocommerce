@@ -18,6 +18,7 @@ function jal_install() {
 		final_amount bigint,
 		round_amount bigint,
 		amount bigint,
+		ended boolean DEFAULT false,
         shamdooni_transaction_id varchar(100) NOT NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";
