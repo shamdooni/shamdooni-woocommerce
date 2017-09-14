@@ -31,4 +31,5 @@ require('includes/checkout-script.php');
 require('includes/iframe.php');
 require('includes/shamdooni_fee.php');
 require('includes/verify-transaction.php');
+require('includes/badge-widget.php');
 ?>
