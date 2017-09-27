@@ -30,7 +30,7 @@ class wpb_widget extends WP_Widget {
 
         global $wc_shamdooni_address;
         
-        if(is_shamdooni_up()) {
+        if(is_shamdooni_up() && is_api_key()) {
             
             $badge = wp_remote_get( $wc_shamdooni_address . '/api/rounder/v1/badge/key/'. $options['shamduni_apikey'], array( 'timeout' => 120, 'httpversion' => '1.1' ) );
             $json = json_decode($badge['body']);

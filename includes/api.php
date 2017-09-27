@@ -18,7 +18,7 @@ function is_shamdooni_up() {
     $response = wp_remote_post( $wc_shamdooni_address , 
     array(
         'method' => 'GET',
-        'timeout' => 45,
+        'timeout' => 5,
         'redirection' => 5,
         'httpversion' => '1.0',
         'blocking' => true,
@@ -27,6 +27,30 @@ function is_shamdooni_up() {
         ) 
     );
     if(is_array($response)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function is_api_key() {
+    global $wc_shamdooni_address;
+    $options = get_option('shamduni_rounder');    
+    $response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1/checkkey' , 
+        array(
+            'method' => 'POST',
+            'timeout' => 5,
+            'redirection' => 5,
+            'httpversion' => '1.0',
+            'blocking' => true,
+            'headers' => array(),
+            'body' => array( 
+                'key' => $options['shamduni_apikey']
+            ),
+            'cookies' => array()
+        ) 
+    );
+    if($response['response']['code'] == 200) {
         return true;
     } else {
         return false;
@@ -86,15 +110,13 @@ function shamdooni_new_trans($session_key) {
     global $wc_shamdooni_address;
     $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';  
     $transaction = get_trans($session_key)[0];
-    $cart_session_total = intval($woocommerce->session->get_session($session_key)["total"]);    
-
+    $cart_session_total = intval($woocommerce->session->get_session($session_key)["subtotal"]);    
+    if(get_trans($session_key)) {
+        $wpdb->delete( $table_name, array( 'session_key' => $session_key, 'ended' => false ) );
+    }
     
-    if(is_shamdooni_up()) {
-        if(get_trans($session_key)) {
-            $transaction = get_trans($session_key)[0];
-            $cart_session_total = $cart_session_total - $transaction->{'round_amount'};
-            $wpdb->delete( $table_name, array( 'session_key' => $session_key, 'ended' => false ) );
-        }
+    if(is_shamdooni_up() && is_api_key()) {
+        echo $cart_session_total;
         $options = get_option('shamduni_rounder');
         $response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1' , 
             array(

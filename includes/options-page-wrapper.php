@@ -20,6 +20,30 @@
 						<h2 class="hndle "><span class="shamduni">تنظیمات</span>
 						</h2>
 						<div class="inside">
+								<?php
+								    global $wc_shamdooni_address;
+									$options = get_option('shamduni_rounder');    								
+									$response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1/getBalance' , 
+										array(
+											'method' => 'POST',
+											'timeout' => 5,
+											'redirection' => 5,
+											'httpversion' => '1.0',
+											'blocking' => true,
+											'headers' => array(),
+											'body' => array( 
+												'key' => $options['shamduni_apikey']
+											),
+											'cookies' => array()
+										) 
+									);
+									if($response['response']['code'] == 200) {
+										$balance = json_decode($response['body']);
+										
+										echo '<h2>'.'بدهی شما: ' . $balance->{'balance'} . ' ریال'.'</h2>';
+										echo '<hr>';
+									}
+								?>
                             <form method="post" action="">
 								<input type="hidden" value="Y" name="shamduni_form_submitted">
                                 <table class="form-table">
