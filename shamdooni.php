@@ -5,7 +5,7 @@ Version: 1.0.0
 Description: رند کننده قیمت شمعدونی برای ووکامرس
 Plugin URI:
 Author: Shamdooni Organization
-Author URI: http://www.shamdooni.org
+Author URI: https://www.shamdooni.org
 */
 
 ######################################################
@@ -14,7 +14,7 @@ Author URI: http://www.shamdooni.org
 //
 $plugin_url = WP_PLUGIN_URL . __FILE__;
 $options = array();
-$wc_shamdooni_address = 'http://localhost:8080';
+$wc_shamdooni_address = 'https://www.shamdooni.org';
 $wc_shamduni_iframe = $wc_shamdooni_address.'/iframe';
 $wc_shamduni_api = get_site_url() . '/wp-json/shamdooni/v1/rounder';
 
