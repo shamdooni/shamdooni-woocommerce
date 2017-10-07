@@ -14,7 +14,7 @@ function shamd_wc_get_trans($session_key) {
 }
 
 function shamd_wc_is_currency_iranian() {
-    if(get_option('woocommerce_currency') == 'IRR' || 'IRT') {
+    if(get_option('woocommerce_currency') == 'IRR' ||  get_option('woocommerce_currency') == 'IRT') {
         return true;
     } else { 
         return false;
@@ -42,7 +42,8 @@ function shamd_wc_is_shamdooni_up() {
         'cookies' => array()
         ) 
     );
-    if(is_array($response) && shamd_wc_is_currency_iranian()) {
+    $iranian_currency = shamd_wc_is_currency_iranian();
+    if(is_array($response) && $iranian_currency) {
         return true;
     } else {
         return false;
