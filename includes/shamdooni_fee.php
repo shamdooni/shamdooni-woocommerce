@@ -1,5 +1,5 @@
 <?php
-function woocommerce_custom_surcharge() {
+function shamd_wc_woocommerce_custom_surcharge() {
     global $woocommerce;
     global $wpdb;
     $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';
@@ -10,9 +10,13 @@ function woocommerce_custom_surcharge() {
         return;
     
     if($is_there_trans) {
-        $transaction = get_trans($session_key)[0];
-        $woocommerce->cart->add_fee( 'شمعدونی', $transaction->{'round_amount'}, true, '' );
+        $transaction = shamd_wc_get_trans($session_key)[0];
+        $round_amount = $transaction->{'round_amount'};
+        if(!shamd_wc_is_currency_rial()) {
+            $round_amount = $round_amount / 10;
+        }
+        $woocommerce->cart->add_fee( 'شمعدونی', $round_amount, true, '' );
     }
 } 
-add_action( 'woocommerce_cart_calculate_fees','woocommerce_custom_surcharge' );
+add_action( 'woocommerce_cart_calculate_fees','shamd_wc_woocommerce_custom_surcharge' );
 ?>

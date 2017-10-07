@@ -21,7 +21,7 @@
 						</h2>
 						<div class="inside">
 								<?php
-								    global $wc_shamdooni_address;
+									global $wc_shamdooni_address;
 									$options = get_option('shamduni_rounder');    								
 									$response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1/getBalance' , 
 										array(
@@ -37,12 +37,12 @@
 											'cookies' => array()
 										) 
 									);
-									if($response['response']['code'] == 200) {
-										$balance = json_decode($response['body']);
-										
-										echo '<h2>'.'بدهی شما: ' . $balance->{'balance'} . ' ریال'.'</h2>';
-										echo '<hr>';
-									}
+										if($response['response']['code'] == 200) {
+											$balance = json_decode($response['body']);
+											
+											echo '<h2>'.'بدهی شما: ' . $balance->{'balance'} . ' ریال'.'</h2>';
+											echo '<hr>';
+										}
 								?>
                             <form method="post" action="">
 								<input type="hidden" value="Y" name="shamduni_form_submitted">

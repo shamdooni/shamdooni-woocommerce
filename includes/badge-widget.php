@@ -1,24 +1,25 @@
 <?php
 // Register and load the widget
 function wpb_load_widget() {
-    register_widget( 'wpb_widget' );
+    register_widget( 'shamd_wc_badge_widget' );
 }
 add_action( 'widgets_init', 'wpb_load_widget' );
  
 // Creating the widget 
-class wpb_widget extends WP_Widget {
+// shamd_wc_badge_widget
+class shamd_wc_badge_widget extends WP_Widget {
  
     function __construct() {
         parent::__construct(
         
         // Base ID of your widget
-        'wpb_widget', 
+        'shamd_wc_badge_widget', 
         
         // Widget name will appear in UI
-        __('ویجت نشان اعتبار شمعدونی', 'wpb_widget_domain'), 
+        __('ویجت نشان اعتبار شمعدونی', 'shamd_wc_badge_widget_domain'), 
         
         // Widget description
-        array( 'description' => __( 'یک ویجیت برای نمایش نشان اعتبار شمعدونی', 'wpb_widget_domain' ), ) 
+        array( 'description' => __( 'یک ویجیت برای نمایش نشان اعتبار شمعدونی', 'shamd_wc_badge_widget_domain' ), ) 
         );
     }
  
@@ -30,7 +31,7 @@ class wpb_widget extends WP_Widget {
 
         global $wc_shamdooni_address;
         
-        if(is_shamdooni_up() && is_api_key()) {
+        if(shamd_wc_is_shamdooni_up() && shamd_wc_is_api_key()) {
             
             $badge = wp_remote_get( $wc_shamdooni_address . '/api/rounder/v1/badge/key/'. $options['shamduni_apikey'], array( 'timeout' => 120, 'httpversion' => '1.1' ) );
             $json = json_decode($badge['body']);
@@ -61,7 +62,7 @@ class wpb_widget extends WP_Widget {
             
             echo $args['before_widget'];
             echo $args['after_title'];
-            echo __( $badge_html, 'wpb_widget_domain' );
+            echo __( $badge_html, 'shamd_wc_badge_widget_domain' );
             echo $args['after_widget']; 
         }
     }

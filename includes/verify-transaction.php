@@ -1,11 +1,11 @@
 <?php
 
-add_action('woocommerce_checkout_order_processed', 'wh_pre_paymentcall');
-function wh_pre_paymentcall($order_id) {
+add_action('woocommerce_checkout_order_processed', 'shamd_wc_wh_pre_paymentcall');
+function shamd_wc_wh_pre_paymentcall($order_id) {
     global $wpdb;
     global $woocommerce;
 
-    if(is_shamdooni_up() && is_api_key()) {
+    if(shamd_wc_is_shamdooni_up() && shamd_wc_is_api_key()) {
         $session_key = $woocommerce->session->get_session_cookie()[0];
         
         $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';
@@ -25,11 +25,11 @@ function wh_pre_paymentcall($order_id) {
     
 }
 
-add_action( 'woocommerce_payment_complete', 'so_payment_complete' );
-function so_payment_complete( $order_id ){
+add_action( 'woocommerce_payment_complete', 'shamd_wc_so_payment_complete' );
+function shamd_wc_so_payment_complete( $order_id ){
     global $wc_shamdooni_address;
     global $wpdb;    
-    if(is_shamdooni_up() && is_api_key()) {
+    if(shamd_wc_is_shamdooni_up() && shamd_wc_is_api_key()) {
         $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';
         
         $transaction = $wpdb->get_results( "SELECT * FROM $table_name WHERE order_id = $order_id" );

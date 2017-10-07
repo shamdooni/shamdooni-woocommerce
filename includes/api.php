@@ -1,7 +1,7 @@
 <?php
 global $wc_shamdooni_address;
 
-function get_trans($session_key) {
+function shamd_wc_get_trans($session_key) {
     global $woocommerce;
     global $wpdb;
     $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';
@@ -13,7 +13,23 @@ function get_trans($session_key) {
     }
 }
 
-function is_shamdooni_up() {
+function shamd_wc_is_currency_iranian() {
+    if(get_option('woocommerce_currency') == 'IRR' || 'IRT') {
+        return true;
+    } else { 
+        return false;
+    }
+}
+
+function shamd_wc_is_currency_rial() {
+    if(get_option('woocommerce_currency') == 'IRR') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function shamd_wc_is_shamdooni_up() {
     global $wc_shamdooni_address;
     $response = wp_remote_post( $wc_shamdooni_address , 
     array(
@@ -26,14 +42,14 @@ function is_shamdooni_up() {
         'cookies' => array()
         ) 
     );
-    if(is_array($response)) {
+    if(is_array($response) && shamd_wc_is_currency_iranian()) {
         return true;
     } else {
         return false;
     }
 }
 
-function is_api_key() {
+function shamd_wc_is_api_key() {
     global $wc_shamdooni_address;
     $options = get_option('shamduni_rounder');    
     $response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1/checkkey' , 
@@ -57,7 +73,7 @@ function is_api_key() {
     }
 }
 
-function roundIt(WP_REST_Request $request ) {
+function shamd_wc_roundIt(WP_REST_Request $request ) {
     global $woocommerce;
     global $wpdb;
     global $wc_shamdooni_address;
@@ -68,8 +84,8 @@ function roundIt(WP_REST_Request $request ) {
     $session_key = $request['session_key'];
     $cart_session_total = intval($woocommerce->session->get_session($session_key)["total"]);
 
-    if(get_trans($session_key)) {
-        $transaction = get_trans($session_key)[0];
+    if(shamd_wc_get_trans($session_key)) {
+        $transaction = shamd_wc_get_trans($session_key)[0];
         $transaction_id = $transaction->shamdooni_transaction_id;
         $round = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1/' . $transaction_id , 
             array(
@@ -101,22 +117,23 @@ function roundIt(WP_REST_Request $request ) {
             )
         );
     }
-    return 'hello';
 }
 
-function shamdooni_new_trans($session_key) {
+function shamd_wc_shamdooni_new_trans($session_key) {
     global $woocommerce;
     global $wpdb;
     global $wc_shamdooni_address;
     $table_name = $wpdb->prefix . 'wc_shamdooni_transactions';  
-    $transaction = get_trans($session_key)[0];
+    $transaction = shamd_wc_get_trans($session_key)[0];
     $cart_session_total = intval($woocommerce->session->get_session($session_key)["subtotal"]);    
-    if(get_trans($session_key)) {
+    if(shamd_wc_get_trans($session_key)) {
         $wpdb->delete( $table_name, array( 'session_key' => $session_key, 'ended' => false ) );
     }
     
-    if(is_shamdooni_up() && is_api_key()) {
-        echo $cart_session_total;
+    if(shamd_wc_is_shamdooni_up() && shamd_wc_is_api_key()) {
+        if(!shamd_wc_is_currency_rial()) {
+            $cart_session_total = $cart_session_total * 10;
+        }
         $options = get_option('shamduni_rounder');
         $response = wp_remote_post( $wc_shamdooni_address . '/api/rounder/v1' , 
             array(
@@ -150,7 +167,7 @@ function shamdooni_new_trans($session_key) {
 add_action( 'rest_api_init', function () {
     register_rest_route( 'shamdooni/v1', '/rounder/(?P<session_key>[\w-]+)/' , array(
         'methods' => 'POST',
-        'callback' => 'roundIt',
+        'callback' => 'shamd_wc_roundIt',
     ) );
 } );
 

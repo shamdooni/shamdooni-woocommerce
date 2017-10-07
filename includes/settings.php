@@ -1,16 +1,16 @@
 <?php
-function shamduni_rounder_menu() {
+function shamd_wc_shamduni_rounder_menu() {
     add_options_page(
         'شمعدونی ووکامرس',
         'شمعدونی ووکامرس',
         'manage_options',
         'shamduni-rounder',
-        'shamduni_rounder_options_page'
+        'shamd_wc_shamduni_rounder_options_page'
     );
 }
-add_action('admin_menu', 'shamduni_rounder_menu');
+add_action('admin_menu', 'shamd_wc_shamduni_rounder_menu');
 
-function shamduni_rounder_options_page() {
+function shamd_wc_shamduni_rounder_options_page() {
     global $plugin_url;
     global $options;
     global $woocommerce;
@@ -32,10 +32,10 @@ function shamduni_rounder_options_page() {
     require('options-page-wrapper.php');
 }
 
-function shamdooni_rounder_backend_styles() {
+function shamd_wc_shamdooni_rounder_backend_styles() {
     wp_enqueue_style( 'shamdooni_rounder_backend_css', plugins_url('shamdooni/includes/backend.css'));
 }
 
-add_action('admin_head', 'shamdooni_rounder_backend_styles');
+add_action('admin_head', 'shamd_wc_shamdooni_rounder_backend_styles');
 
 ?>

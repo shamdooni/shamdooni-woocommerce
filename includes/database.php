@@ -1,6 +1,6 @@
 <?php
 
-function jal_install() {
+function shamd_wc_jal_install() {
     global $wpdb;
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     global $charset_collate;
